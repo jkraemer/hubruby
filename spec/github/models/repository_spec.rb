@@ -28,6 +28,14 @@ describe GitHub::Repository do
     subject.forks.should_not be_empty
   end
 
+  it "can show its commits" do
+    subject.commits.should_not be_empty
+  end
+
+  it "can show its commits for a branch" do
+    subject.commits('master').should_not be_empty
+  end
+
   it "should be able to find a commit by id" do
     initial_commit_id = '1ec7f79c34e3008e93b7b9210282a743f83db86d'
     subject.commit(initial_commit_id).should_not be_nil

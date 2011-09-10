@@ -7,7 +7,8 @@ module GitHub
     end
 
     def owner
-      @owner ||= GitHub::User.new(@table[:owner])
+      owner = @table[:owner]
+      @owner ||= String === owner ? GitHub.user(owner) : GitHub::User.new(owner)
     end
 
     def branches
@@ -20,6 +21,10 @@ module GitHub
 
     def commit(id)
       GitHub.commit(owner.login, self.name, id)
+    end
+    
+    def commits(branch = nil, options = {})
+      GitHub.commits owner.login, self.name, branch, options
     end
   end
 end

@@ -39,8 +39,9 @@ module GitHub
       Repository.repositories_from_hashes(j)
     end
 
-    def commits(login, repository_name, branch = 'master')
-      h = json("/repos/#{login}/#{repository_name}/commits/#{branch}")
+    def commits(login, repository_name, branch = nil, options = {})
+      h = json("/repos/#{login}/#{repository_name}/commits#{"/#{branch}" if branch}", :query => options)
+      h = [h] if Hash === h
       Commit.commits_from_hashes(h, Repository.new(:owner => login, :name => repository_name))
     end
 
@@ -66,8 +67,8 @@ module GitHub
 
     private
 
-    def json(path)
-      HTTParty.get('https://api.github.com' << path).parsed_response
+    def json(path, options = {})
+      HTTParty.get('https://api.github.com' << path, options).parsed_response
     end
   end # Finders
 end # GitHub
